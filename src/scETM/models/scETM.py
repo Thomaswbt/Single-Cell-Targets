@@ -307,7 +307,8 @@ class scETM(BaseCellModel):
             self.guidance_graph = self.guidance_graph.to(self.rho.device)
             # dist = torch.norm(self.rho.permute(1,0) - self.rho.permute(1,0).unsqueeze(1), dim = -1)
             dist = torch.cdist(self.rho.permute(1,0), self.rho.permute(1,0))
-            loss_reg = torch.mean(large_mul(self.guidance_graph,dist))
+            sq_dist = dist * dist
+            loss_reg = torch.mean(large_mul(self.guidance_graph,sq_dist))
             # loss_reg = torch.mean(self.guidance_graph.cpu() * dist.cpu()).to(self.rho.device)
         # print(self.alpha.shape,self.rho.shape) # (50,400), (400,14878)
         # print(recon_log.shape) # (1698,14878) or (ncells,ngenes)
